@@ -102,7 +102,7 @@ export class SeedsCommonData1710669600002 implements MigrationInterface {
         const categoryTypeId = categoryType[0].id;
 
         const featureResult = await queryRunner.query(`
-            SELECT id FROM feature WHERE link = '/manager/admin/features'
+            SELECT id FROM feature WHERE link = '/manager/admin/feature'
         `);
         const featureId = featureResult[0].id;
 
