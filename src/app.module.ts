@@ -50,6 +50,13 @@ import { CategoryTypeController } from './controllers/category-type.controller';
 import { CategoryTypeService } from './services/category-type.service';
 import { Reservation } from './entities/reservation.entity';
 import { History } from './entities/history.entity';
+import { FeatureContentModule } from './modules/feature-content.module';
+import { ArticleModule } from './modules/article.module';
+import { ExamModule } from './modules/exam.module';
+import { QuestionModule } from './modules/question.module';
+import { ExamQuestionModule } from './modules/exam-question.module';
+import { UserExamModule } from './modules/user-exam.module';
+import { UserAnswerModule } from './modules/user-answer.module';
 @Module({
   imports: [
     ConfigModule,
@@ -108,6 +115,13 @@ import { History } from './entities/history.entity';
       History
     ]),
     NotificationModule,
+    FeatureContentModule,
+    ArticleModule,
+    ExamModule,
+    QuestionModule,
+    ExamQuestionModule,
+    UserExamModule,
+    UserAnswerModule,
     // AuthModule,
   ],
   controllers: [
