@@ -51,12 +51,19 @@ import { CategoryTypeService } from './services/category-type.service';
 import { Reservation } from './entities/reservation.entity';
 import { History } from './entities/history.entity';
 import { FeatureContentModule } from './modules/feature-content.module';
-import { ArticleModule } from './modules/article.module';
 import { ExamModule } from './modules/exam.module';
 import { QuestionModule } from './modules/question.module';
 import { ExamQuestionModule } from './modules/exam-question.module';
 import { UserExamModule } from './modules/user-exam.module';
 import { UserAnswerModule } from './modules/user-answer.module';
+import { Article } from './entities/article.entity';
+import { ArticleController } from './controllers/article.controller';
+import { Exam } from './entities/exam.entity';
+import { ExamQuestion } from './entities/exam-question.entity';
+import { Question } from './entities/question.entity';
+import { UserAnswer } from './entities/user-answer.entity';
+import { UserExam } from './entities/user-exam.entity';
+import { ArticleModule } from './modules/article.module';
 @Module({
   imports: [
     ConfigModule,
@@ -91,7 +98,13 @@ import { UserAnswerModule } from './modules/user-answer.module';
         Category,
         CategoryType,
         Reservation,
-        History
+        History,
+        Article,
+        Exam,
+        ExamQuestion,
+        Question,
+        UserAnswer,
+        UserExam,
       ],
       synchronize: true,
       migrations: [join(__dirname, 'migrations', '*.{ts,js}')],
@@ -112,16 +125,16 @@ import { UserAnswerModule } from './modules/user-answer.module';
       Category,
       CategoryType,
       Reservation,
-      History
+      History,
     ]),
     NotificationModule,
     FeatureContentModule,
-    ArticleModule,
     ExamModule,
     QuestionModule,
     ExamQuestionModule,
     UserExamModule,
     UserAnswerModule,
+    ArticleModule,
     // AuthModule,
   ],
   controllers: [

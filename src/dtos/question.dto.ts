@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsEnum, IsBoolean, IsNumber } from 'class-validator';
-import { SkillType } from '../entities/question.entity';
+import { SkillType } from '../enums/skill-type.enum';
 
 export class QuestionDto {
   @IsOptional()
