@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, UseInterceptors, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+  UseInterceptors,
+  Query,
+} from '@nestjs/common';
 import { RoleService } from '../services/role.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { Role } from '../entities/role.entity';
@@ -16,11 +27,15 @@ export class RoleController {
   constructor(private roleService: RoleService) {}
 
   @Get()
-  async getAll(@Query('page') page: number, @Query('size') size: number, @Query('search') search: string) {
+  async getAll(
+    @Query('page') page: number,
+    @Query('size') size: number,
+    @Query('search') search: string,
+  ) {
     const filter: PaginationParams = {
       page: page || 1,
       size: size || 10,
-      search: search || ''
+      search: search || '',
     };
     return this.roleService.findAllWithPagination(filter);
   }
@@ -30,7 +45,6 @@ export class RoleController {
     return this.roleService.findById(this.decode(id));
   }
 
-  
   @Get('/find/:code')
   async findByCode(@Param('code') code: string): Promise<Role | null> {
     return this.roleService.findByCode(code);
@@ -67,8 +81,8 @@ export class RoleController {
     return this.roleService.assignFeatures(this.decode(id), assignFeatureDto);
   }
 
-  private decode(id:string){
+  private decode(id: string) {
     const idDecode = Base64EncryptionUtil.decrypt(id);
     return parseInt(idDecode);
   }
-} 
+}
