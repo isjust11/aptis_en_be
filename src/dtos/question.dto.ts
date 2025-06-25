@@ -1,5 +1,6 @@
 import { IsString, IsOptional, IsEnum, IsBoolean, IsNumber } from 'class-validator';
 import { SkillType } from '../enums/skill-type.enum';
+import { QuestionType } from 'src/enums/question-type.enum';
 
 export class QuestionDto {
   @IsOptional()
@@ -13,8 +14,8 @@ export class QuestionDto {
   skill: SkillType;
 
   @IsOptional()
-  @IsString()
-  type?: string;
+  @IsEnum(QuestionType)
+  type?: QuestionType;
 
   @IsOptional()
   options?: string[];

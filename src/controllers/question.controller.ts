@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, Put, Delete, UseInterceptors } from
 import { QuestionService } from '../services/question.service';
 import { QuestionDto } from '../dtos/question.dto';
 import { EncryptionInterceptor } from 'src/interceptors/encryption.interceptor';
+import { Base64EncryptionUtil } from 'src/utils/base64Encryption.util';
 
 @Controller('question')
 @UseInterceptors(EncryptionInterceptor)
@@ -20,16 +21,20 @@ export class QuestionController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.questionService.findOne(Number(id));
+    return this.questionService.findOne(this.decode(id));
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() dto: QuestionDto) {
-    return this.questionService.update(Number(id), dto);
+    return this.questionService.update(this.decode(id), dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.questionService.remove(Number(id));
+    return this.questionService.remove(this.decode(id));
   }
+    private decode(id: string) {
+      const idDecode = Base64EncryptionUtil.decrypt(id);
+      return parseInt(idDecode);
+    }
 } 
