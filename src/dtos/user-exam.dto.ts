@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, IsDateString } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsDateString, IsBoolean } from 'class-validator';
 
 export class UserExamDto {
   @IsOptional()
@@ -25,4 +25,34 @@ export class UserExamDto {
   @IsOptional()
   @IsString()
   status?: string;
+
+  // Thông tin thanh toán
+  @IsOptional()
+  @IsBoolean()
+  isPaid?: boolean;
+
+  @IsOptional()
+  @IsDateString()
+  paidAt?: Date;
+
+  @IsOptional()
+  @IsString()
+  paymentMethod?: string;
+
+  @IsOptional()
+  @IsString()
+  transactionId?: string;
+
+  @IsOptional()
+  @IsString()
+  paymentStatus?: string;
+
+  // Thông tin kích hoạt
+  @IsOptional()
+  @IsBoolean()
+  isActivated?: boolean;
+
+  @IsOptional()
+  @IsDateString()
+  activatedAt?: Date;
 } 

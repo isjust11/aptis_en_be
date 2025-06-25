@@ -32,4 +32,24 @@ export class UserExamController {
   remove(@Param('id') id: string) {
     return this.userExamService.remove(Number(id));
   }
+
+  @Get('by-user/:userId')
+  findByUser(@Param('userId') userId: string) {
+    return this.userExamService.findByUser(Number(userId));
+  }
+
+  @Get('activated/by-user/:userId')
+  findActivatedByUser(@Param('userId') userId: string) {
+    return this.userExamService.findActivatedByUser(Number(userId));
+  }
+
+  @Post('pay')
+  payForExam(@Body() body: { userId: number; examId: number; paymentMethod?: string; transactionId?: string }) {
+    return this.userExamService.payForExam(body.userId, body.examId, body);
+  }
+
+  @Post('activate')
+  activateExamForUser(@Body() body: { userId: number; examId: number }) {
+    return this.userExamService.activateExamForUser(body.userId, body.examId);
+  }
 } 

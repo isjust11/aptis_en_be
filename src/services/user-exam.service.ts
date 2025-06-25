@@ -36,4 +36,35 @@ export class UserExamService {
     const result = await this.userExamRepository.delete(id);
     if (result.affected === 0) throw new NotFoundException('UserExam not found');
   }
+
+  async findByUser(userId: number): Promise<UserExam[]> {
+    return this.userExamRepository.find({ where: { userId } });
+  }
+
+  async findActivatedByUser(userId: number): Promise<UserExam[]> {
+    return this.userExamRepository.find({ where: { userId, isActivated: true } });
+  }
+
+  async payForExam(userId: number, examId: number, paymentInfo: Partial<UserExam>): Promise<UserExam> {
+    let userExam = await this.userExamRepository.findOne({ where: { userId, examId } });
+    if (!userExam) {
+      userExam = this.userExamRepository.create({ userId, examId });
+    }
+    Object.assign(userExam, {
+      isPaid: true,
+      paidAt: new Date(),
+      paymentMethod: paymentInfo.paymentMethod,
+      transactionId: paymentInfo.transactionId,
+      paymentStatus: 'completed',
+    });
+    return this.userExamRepository.save(userExam);
+  }
+
+  async activateExamForUser(userId: number, examId: number): Promise<UserExam> {
+    const userExam = await this.userExamRepository.findOne({ where: { userId, examId } });
+    if (!userExam || !userExam.isPaid) throw new NotFoundException('Exam chưa được thanh toán');
+    userExam.isActivated = true;
+    userExam.activatedAt = new Date();
+    return this.userExamRepository.save(userExam);
+  }
 } 

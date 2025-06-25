@@ -25,7 +25,8 @@ export class EncryptionInterceptor implements NestInterceptor {
     if (!entity) return entity;
 
     if (typeof entity === 'object') {
-      const encryptedEntity = { ...entity };
+      // Không tạo object mới nếu entity đã là class instance
+      const encryptedEntity = entity;
 
       // Mã hóa ID chính
       if (encryptedEntity.id) {

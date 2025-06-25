@@ -8,27 +8,27 @@ import { Base64EncryptionUtil } from 'src/utils/base64Encryption.util';
 @Controller('article')
 @UseInterceptors(EncryptionInterceptor)
 export class ArticleController {
-  constructor(private readonly articleService: ArticleService) {}
+  constructor(private readonly articleService: ArticleService) { }
 
   @Post()
   create(@Body() dto: ArticleDto) {
     return this.articleService.create(dto);
   }
 
-   @Get()
-    async getByPage(
-      @Query('page') page: number,
-      @Query('size') size: number,
-      @Query('search') search: string,
-    ) {
-      const filter: PaginationParams = {
-        page: page || 1,
-        size: size || 10,
-        search: search || '',
-      };
-      return this.articleService.findPagination(filter);
-    }
-  
+  @Get()
+  async getByPage(
+    @Query('page') page: number,
+    @Query('size') size: number,
+    @Query('search') search: string,
+  ) {
+    const filter: PaginationParams = {
+      page: page || 1,
+      size: size || 10,
+      search: search || '',
+    };
+    return this.articleService.findPagination(filter);
+  }
+
 
   @Get('all')
   findAll() {
@@ -50,7 +50,7 @@ export class ArticleController {
     return this.articleService.remove(this.decode(id));
   }
   private decode(id: string) {
-      const idDecode = Base64EncryptionUtil.decrypt(id);
-      return parseInt(idDecode);
-    }
+    const idDecode = Base64EncryptionUtil.decrypt(id);
+    return parseInt(idDecode);
+  }
 } 

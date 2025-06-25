@@ -36,4 +36,25 @@ export class UserExam {
 
   @OneToMany(() => UserAnswer, ua => ua.userExam)
   userAnswers: UserAnswer[];
+
+  @Column({ default: false })
+  isPaid: boolean;
+
+  @Column({ nullable: true })
+  paidAt: Date;
+
+  @Column({ nullable: true })
+  paymentMethod: string;
+
+  @Column({ nullable: true })
+  transactionId: string;
+
+  @Column({ nullable: true })
+  paymentStatus: string; // 'pending', 'completed', 'failed', 'refunded'
+
+  @Column({ default: false })
+  isActivated: boolean;
+
+  @Column({ nullable: true })
+  activatedAt: Date;
 } 

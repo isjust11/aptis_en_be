@@ -173,5 +173,6 @@ import { ArticleModule } from './modules/article.module';
       useClass: JwtAuthGuard,
     },
   ],
+  exports: [UserService],
 })
 export class AppModule { }

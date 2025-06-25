@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ExamQuestion } from './exam-question.entity';
 import { SkillType } from '../enums/skill-type.enum';
+import { QuestionType } from '../enums/question-type.enum';
 @Entity()
 export class Question {
   @PrimaryGeneratedColumn()
@@ -12,8 +13,8 @@ export class Question {
   @Column({ type: 'enum', enum: SkillType })
   skill: SkillType;
 
-  @Column({ nullable: true })
-  type?: string;
+  @Column({ type: 'enum', enum: QuestionType, nullable: true })
+  type?: QuestionType;
 
   @Column('simple-array', { nullable: true })
   options?: string[];

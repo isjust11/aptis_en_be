@@ -1,6 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ExamQuestion } from './exam-question.entity';
+import { UserExam } from './user-exam.entity';
 
+// đây là mô hình Exam, đại diện cho một bài kiểm tra trong hệ thống
 @Entity()
 export class Exam {
   @PrimaryGeneratedColumn()
@@ -23,4 +25,7 @@ export class Exam {
 
   @OneToMany(() => ExamQuestion, eq => eq.exam)
   examQuestions: ExamQuestion[];
+
+  @OneToMany(() => UserExam, ue => ue.exam)
+  userExams: UserExam[];
 } 

@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
+import { Transform } from 'class-transformer';
 
 @Entity()
 export class Article {
@@ -23,17 +24,19 @@ export class Article {
 
   @ManyToOne(() => User, user => user.id, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'authorId' })
-  author?: User;
+  author?: User | null;
 
   @Column({ nullable: true })
-  authorId?: number;
+  authorId?: any;
 
   @Column({ default: true })
   isActive: boolean;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Transform(({ value }) => value ? new Date(value) : value)
   createdAt: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @Transform(({ value }) => value ? new Date(value) : value)
   updatedAt: Date;
 } 
