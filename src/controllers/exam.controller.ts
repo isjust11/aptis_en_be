@@ -3,6 +3,7 @@ import { ExamService } from '../services/exam.service';
 import { ExamDto } from '../dtos/exam.dto';
 import { EncryptionInterceptor } from 'src/interceptors/encryption.interceptor';
 import { Base64EncryptionUtil } from 'src/utils/base64Encryption.util';
+import { CreateQuestionDto } from '../dtos/question.dto';
 
 @Controller('exam')
 @UseInterceptors(EncryptionInterceptor)
@@ -33,6 +34,17 @@ export class ExamController {
   remove(@Param('id') id: string) {
     return this.examService.remove(this.decode(id));
   }
+
+  @Post(':id/questions')
+  createQuestionsForExam(@Param('id') id: string, @Body() body: { questions: CreateQuestionDto[] }) {
+    return this.examService.createQuestionsForExam(this.decode(id), body.questions);
+  }
+
+  @Get(':id/questions')
+  getQuestionsByExam(@Param('id') id: string) {
+    return this.examService.getQuestionsByExam(this.decode(id));
+  }
+
   private decode(id: string) {
     const idDecode = Base64EncryptionUtil.decrypt(id);
     return parseInt(idDecode);
