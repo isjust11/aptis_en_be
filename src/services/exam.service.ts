@@ -1,11 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Exam } from '../entities/exam.entity';
 import { ExamDto } from '../dtos/exam.dto';
 import { Question } from '../entities/question.entity';
 import { ExamQuestion } from '../entities/exam-question.entity';
 import { CreateQuestionDto } from '../dtos/question.dto';
+import { Base64EncryptionUtil } from 'src/utils/base64Encryption.util';
+import { plainToClass } from 'class-transformer';
+import { PaginationParams, PaginatedResponse } from 'src/dtos/filter.dto';
+import { Article } from 'src/entities/article.entity';
 
 @Injectable()
 export class ExamService {
@@ -16,15 +20,45 @@ export class ExamService {
     private questionRepository: Repository<Question>,
     @InjectRepository(ExamQuestion)
     private examQuestionRepository: Repository<ExamQuestion>,
-  ) {}
+  ) { }
 
   async create(dto: ExamDto): Promise<Exam> {
     const entity = this.examRepository.create(dto);
     return this.examRepository.save(entity);
   }
 
+   async findPagination(params: PaginationParams): Promise<PaginatedResponse<Exam>> {
+        const { page = 1, size = 10, search = '' } = params;
+               const skip = (page - 1) * size;
+       
+               const whereConditions = search ? [
+                   { title: Like(`%${search}%`) },
+                   { description: Like(`%${search}%`) },
+               ] : {};
+       
+               const [data, total] = await this.examRepository.findAndCount({
+                   where: whereConditions,
+                   skip,
+                   take: size,
+                   relations: ['examQuestions',],
+                   order: { id: 'DESC' },
+               });
+       
+               return {
+                   data: plainToClass(Exam, data),
+                   total,
+                   page,
+                   size,
+                   totalPages: Math.ceil(total / size),
+               };
+      }
+
   async findAll(): Promise<Exam[]> {
-    return this.examRepository.find();
+    return this.examRepository.find(
+      {
+        relations:['examQuestions']
+      }
+    );
   }
 
   async findOne(id: number): Promise<Exam> {
@@ -49,14 +83,26 @@ export class ExamService {
     const createdQuestions: Question[] = [];
 
     for (let i = 0; i < questions.length; i++) {
-      const questionData = questions[i];
-      const question = this.questionRepository.create({
-        ...questionData,
-        options: questionData.options || [],
-        isActive: true
-      });
-      
-      const savedQuestion = await this.questionRepository.save(question);
+      const questionInput = questions[i];
+      const idDecode = parseInt(Base64EncryptionUtil.decrypt(questionInput?.id??""));
+      const id = isNaN(idDecode) ? -1 : idDecode;
+      var questionData = await this.questionRepository.findOne({ where: { id: id } });
+
+      if (questionData) {
+        Object.assign(questionData, questionInput);
+        questionData.updatedAt = new Date();
+        questionData.id = id;
+      } else {
+        questionData = await this.questionRepository.create({
+          ...questionInput,
+          id: 0,
+          isActive: true,
+          createdAt: new Date()
+        });
+      }
+
+
+      const savedQuestion = await this.questionRepository.save(questionData);
       createdQuestions.push(savedQuestion);
 
       // Tạo liên kết với exam
@@ -65,7 +111,7 @@ export class ExamService {
         question: savedQuestion,
         order: i + 1
       });
-      
+
       await this.examQuestionRepository.save(examQuestion);
     }
 

@@ -23,7 +23,7 @@ export class Exam {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
-  @OneToMany(() => ExamQuestion, eq => eq.exam)
+  @OneToMany(() => ExamQuestion, eq => eq.exam,{onDelete:'CASCADE'})
   examQuestions: ExamQuestion[];
 
   @OneToMany(() => UserExam, ue => ue.exam)

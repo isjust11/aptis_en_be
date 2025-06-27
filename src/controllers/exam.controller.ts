@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UseInterceptors, Query } from '@nestjs/common';
 import { ExamService } from '../services/exam.service';
 import { ExamDto } from '../dtos/exam.dto';
 import { EncryptionInterceptor } from 'src/interceptors/encryption.interceptor';
 import { Base64EncryptionUtil } from 'src/utils/base64Encryption.util';
 import { CreateQuestionDto } from '../dtos/question.dto';
+import { PaginationParams } from 'src/dtos/filter.dto';
 
 @Controller('exam')
 @UseInterceptors(EncryptionInterceptor)
@@ -15,7 +16,21 @@ export class ExamController {
     return this.examService.create(dto);
   }
 
-  @Get()
+   @Get()
+    async getByPage(
+      @Query('page') page: number,
+      @Query('size') size: number,
+      @Query('search') search: string,
+    ) {
+      const filter: PaginationParams = {
+        page: page || 1,
+        size: size || 10,
+        search: search || '',
+      };
+      return this.examService.findPagination(filter);
+    }
+
+  @Get('all')
   findAll() {
     return this.examService.findAll();
   }

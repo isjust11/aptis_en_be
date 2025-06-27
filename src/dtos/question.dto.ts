@@ -4,6 +4,9 @@ import { QuestionType } from 'src/enums/question-type.enum';
 
 export class CreateQuestionDto {
   @IsString()
+  id:string;
+  
+  @IsString()
   content: string;
 
   @IsEnum(SkillType)
